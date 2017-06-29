@@ -1,0 +1,22 @@
+<br><br><br>
+<div class="container"><!-- ng hide comes here -->
+  <div class="panel panel-success width-fix">
+    <div class="panel-heading">
+      <h2 class="panel-title">Register</h2>
+    </div>
+    <div class="panel-body">
+      
+      <form class="form-signin" ng-submit="waddleRegister()">
+        <h2 class="form-signin-heading">Provide your Details</h2>
+        <input type="text" class="form-control" placeholder="User Name" ng-model="waddleUname" required autofocus>
+
+        <div class="alert alert-danger" role="alert" ng-hide="validUname"><strong><span class="glyphicon glyphicon-remove"></span></strong>Select a Valid Username</div>
+        <div class="alert alert-success" role="alert" ng-show="validUname"><strong><span class="glyphicon glyphicon-ok"></span></strong> User Name is Valid</div>
+        
+        <button class="btn btn-lg btn-info btn-block" type="submit" ng-show="validUname">Register</button>
+      </form> 
+    </div>
+  </div>
+  
+
+</div>

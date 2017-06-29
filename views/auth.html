@@ -1,0 +1,36 @@
+<br><br><br>
+<div class="container">
+  <div class="panel panel-success width-fix">
+    <div class="panel-heading">
+      <h2 class="panel-title">Sign In</h2>
+    </div>
+    <div class="panel-body">
+      <form class="form-signin" ng-submit="waddleSignin()" ng-hide="firebaseUser">
+        <h2 class="form-signin-heading">Please sign in</h2>
+
+        <div class="alert alert-danger" role="alert" ng-if="error"><strong>{{error.code}}</strong>{{error.message}} </div>
+        <div class="alert alert-success" role="alert" ng-if="message">{{message}}</div>
+
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" ng-model="waddleEmail" required autofocus>
+        
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" ng-model="waddlePassword" required>
+        <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-warning btn-block" ng-click="waddleSignup()">Sign Up</button>
+      </form> 
+      <div ng-show="firebaseUser">
+      <center>
+        
+        <div class="alert alert-warning" role="alert" ng-if="message">{{message}}</div>
+        <h2>Hey </h2>
+        <h2>{{ firebaseUser.email}}</h2>
+
+          <button class="button btn-block" ng-click="waddleStart()">Start Chatting</button>
+          <button class="button btn-block" ng-click="auth.$signOut(); waddleSignout()">Sign Out</button>
+      </center>
+
+      </div>
+    </div>
+  </div>
+  
+
+</div>

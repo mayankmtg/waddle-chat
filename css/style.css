@@ -37,17 +37,27 @@ body {
     transition-duration: 0.4s;
     cursor: pointer;
 }
-
 .button:hover {
     background-color: #ff4d4d; /* Green */
     color: white;
     text-decoration: none;
+}
+.panel {
+  border-color: #ff4d4d;
 }
 .panel > .panel-heading {
     background-image: none;
     background-color: #ff4d4d;
     color: white;
 
+}
+.panel > .panel-body > .list-group {
+  border: none !important;
+  background-color: transparent;
+}
+.panel > .panel-body > .list-group > .chat{
+  max-width: 60%;
+  min-width: 60%;
 }
 .rainbow {
   color: #fcfcfc;
