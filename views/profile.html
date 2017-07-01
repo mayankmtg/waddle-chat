@@ -1,5 +1,5 @@
 <br><br><br>
-<div class="container"><!-- ng hide comes here -->
+<div class="container" ng-hide="firebaseUser"><!-- ng hide comes here -->
   <div class="panel panel-success width-fix">
     <div class="panel-heading">
       <h2 class="panel-title">Register</h2>
@@ -8,9 +8,20 @@
       
       <form class="form-signin" ng-submit="waddleRegister()">
         <h2 class="form-signin-heading">Provide your Details</h2>
-        <input type="text" class="form-control" placeholder="User Name" ng-model="waddleUname" required autofocus>
+        
+        <div class="alert alert-danger" role="alert" ng-if="error"><strong>{{error.code}}</strong>{{error.message}} </div>
+        <div class="alert alert-success" role="alert" ng-if="message">{{message}}</div>
 
-        <div class="alert alert-danger" role="alert" ng-hide="validUname"><strong><span class="glyphicon glyphicon-remove"></span></strong>Select a Valid Username</div>
+        <input type="text" class="form-control" placeholder="Name" ng-model="waddleName" required autofocus>
+
+        <input type="email" class="form-control" placeholder="Email address" ng-model="waddleEmail" required>
+        
+        <input type="password" class="form-control" placeholder="Password" ng-model="waddlePassword" required>
+        
+        <input type="password" class="form-control" placeholder="Confirm Password" ng-model="waddleConfirm" required>
+
+        <input type="text" class="form-control" placeholder="User Name" ng-model="waddleUname" required>
+        <div class="alert alert-danger" role="alert" ng-hide="validUname"><strong><span class="glyphicon glyphicon-remove"></span></strong>Username Already in Use</div>
         <div class="alert alert-success" role="alert" ng-show="validUname"><strong><span class="glyphicon glyphicon-ok"></span></strong> User Name is Valid</div>
         
         <button class="btn btn-lg btn-info btn-block" type="submit" ng-show="validUname">Register</button>
@@ -19,4 +30,28 @@
   </div>
   
 
+</div>
+<div class="container" ng-show="firebaseUser">
+  <div class="row">
+    <div class="col-sm-5 pull-left">
+    <div class="pull-right">
+      <span class="glyphicon glyphicon-user lrge"></span>
+
+    </div>
+    </div>
+    <div class="col-sm-1">
+      &nbsp;
+    </div>
+    <div class="col-sm-6 pull-right">
+    <div class="pull-left">
+      <h4><strong>Name :</strong> {{waddleName}}</h4>
+      <h4><strong>UserName :</strong> {{waddleUname}}</h4>
+      <h4><strong>Email :</strong> {{waddleEmail}}</h4>
+      <h4><strong>Date of Joining :</strong> {{waddleDateofJoin}}</h4>
+    </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+  </div>
 </div>
