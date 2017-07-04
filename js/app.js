@@ -48,6 +48,7 @@ Waddle.config(['$routeProvider', function($routeProvider){
 		})
 		.when('/contact',{
 			templateUrl: 'views/contact.html',
+			controller: 'waddleContact',
 		})
 		.when('/profile',{
 			templateUrl: 'views/profile.html',
@@ -124,19 +125,29 @@ Waddle.controller('waddleProfile', ['$scope','Auth','$firebaseArray','$location'
 	var ref=firebase.database().ref().child('Users');
 	var ref2=firebase.database().ref().child('usernames');
 	$scope.$watch("waddleUname", function(){
-		$scope.validUname=true;
-		ref2.once('value', function(snapshot){
-			var stringUname=""+$scope.waddleUname;
-			if (snapshot.hasChild(stringUname) || $scope.waddleUname=="") {
-				$scope.$apply(function() {
-					$scope.validUname=false;
-				});
-			}
-		})
+		$scope.validUname=false;
+		if($scope.waddleUname!=null){
+			var wUname=""+$scope.waddleUname;
+			ref2.child(wUname).once('value').then(function(snapshot){
+				var corresUname= snapshot.val();
+				console.log(corresUname);
+				if(corresUname){
+					$scope.$apply(function(){
+						$scope.validUname=false;
+					});
+				}
+				else{
+					$scope.$apply(function(){
+						$scope.validUname=true;
+					});
+				}
+			});
+		}
+
 		console.log("Valid: "+ $scope.validUname);
 	});
 	$scope.waddleDisp= function(){
-
+		/* TODO: write this function for profile after login */
 	}
 	$scope.waddleRegister = function(){
 		$scope.message = null;
@@ -161,14 +172,90 @@ Waddle.controller('waddleProfile', ['$scope','Auth','$firebaseArray','$location'
 			$scope.error.message="Please re-enter Passwords in both fields";
 			$scope.waddlePassword="";
 			$scope.waddleConfirm="";
-
 		}
-			
 	}
-	
-
 }]);
 
-Waddle.controller('waddleChat', ['$scope','$firebaseArray', function($scope, $firebaseArray){
+Waddle.controller('waddleChat', ['$scope','Auth','$firebaseArray','$location', function($scope, Auth,$firebaseArray,$location){
+	var refC=firebase.database().ref().child('Chatroom');
+	var refU=firebase.database().ref().child('Users');
+	var refUn=firebase.database().ref().child('usernames');
+	$scope.messages=null;
+	$scope.currentChatfUname=null;
+	$scope.currentChatfUid=null;
+	$scope.waddleFriends = $firebaseArray(refU.child(Auth.$getAuth().uid).child('Friends'));
+	$scope.uname=null;
+	refU.child(Auth.$getAuth().uid).child("uname").once("value")
+	.then(function(snapshot){
+		$scope.uname=snapshot.val();
+	})
+	.catch(function(error){
+		console.log(error);
+	});
+	$scope.addWaddleFriend = function(){
+		refUn.child($scope.friendUname).once('value').then(function(snapshot){
+			var fUid= snapshot.val();
+			if(fUid == null){
+				console.log("error: No such Username found");
+			}
+			else if(fUid == Auth.$getAuth().uid){
+				console.log("Your UID");
+			}
+			else{
+				console.log("added");
+				$scope.fwaddleFriends = $firebaseArray(refU.child(fUid).child('Friends'));
+				$scope.waddleFriends.$add({
+					fUid : fUid,
+					fUname: $scope.friendUname
+				});
+				$scope.fwaddleFriends.$add({
+					fUid : Auth.$getAuth().uid,
+					fUname: $scope.uname
+				});
+				
+			}
+		});
+			
 
+	};
+	$scope.waddleChatroom =function(fUname, fUid){
+		$scope.fUname = fUname;
+		$scope.messages=$firebaseArray(refC.child(Auth.$getAuth().uid).child(fUid));
+		$scope.currentChatfUname=fUname;
+		$scope.currentChatfUid=fUid;
+	}
+	$scope.waddleSend= function(){
+		if($scope.currentChatfUname!=null){
+			$scope.messages=$firebaseArray(refC.child(Auth.$getAuth().uid).child($scope.currentChatfUid));
+			$scope.fmessages=$firebaseArray(refC.child($scope.currentChatfUid).child(Auth.$getAuth().uid));
+			$scope.messages.$add({
+				msg: $scope.message,
+				sent: "right"
+			});
+			$scope.fmessages.$add({
+				msg: $scope.message,
+				sent: "left"
+			});
+			console.log("sent");
+		}
+		else{
+			console.log("Select a Valid ChatRoom");
+		}
+	}
 }]);
+
+Waddle.controller('waddleContact', ['$scope','$firebaseArray', function($scope, $firebaseArray){
+	var refS=firebase.database().ref().child('Suggestions');
+	$scope.suggest=$firebaseArray(refS);
+	$scope.message=null;
+	$scope.contactForm=function(){
+		$scope.suggest.$add({
+			suggest_email: $scope.contactEmail,
+			suggest_subject: $scope.contactSubject,
+			suggest_message: $scope.contactMessage
+		});
+		$scope.message=$scope.contactMessage;
+
+	}
+}]);
+
