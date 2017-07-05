@@ -9,7 +9,7 @@ Chat Application
 # What is it?
 Waddle Chat is the pre-eminent chat location for unlimited real-time chat experience.
 
-View At : 
+View At : https://mayankmtg.github.io/waddle-chat/#!/home
 
 ## Aim
 The main aim of the project is to:
